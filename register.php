@@ -62,7 +62,7 @@ if(isset($_POST['submit'])){
                     $mail->Body    = 'Your Verification Code is: <b>' . $code. '</b>';
 
                     $mail->send();
-                    header('Location:checkCode.php?email=' . $_POST['email']);
+                    header('Location:checkCode.php?email=' . $_POST['email'] . '&forget=0');
                     echo 'Message has been sent';
                 } catch (Exception $e) {
                     echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";

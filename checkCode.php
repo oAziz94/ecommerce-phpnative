@@ -3,49 +3,42 @@
 include_once 'header.php';
 include_once 'php/User.php';
 include_once 'php/validation.php';
+
 // If Get Has Data
-if($_GET){
-    // If Key Email Exists
-    if(isset($_GET['email'])){
-        // If Email Exists
-        if($_GET['email']){
-            $emailChecked = new User;
-            $emailChecked->setEmail($_GET['email']);
-            $emailExists = $emailChecked->checkEmail();
-            if($emailExists){
-                $user = $emailExists->fetch_object();
-                
-            } else {
-                header('Location:404.php');
-            }
-        } else {
-            header('Location:404.php');
-        }
-    } else {
-        header('Location:404.php');
-    }
-} else {
-    header('Location:404.php');
-}
+$validation = new validation;
+$user = $validation->emailValidationURL($_GET);
 
 if(isset($_POST['verify'])){
     $errors = [];
     $validation = new validation;
     $validation->setCode($_POST['code']);
     $code_validation = $validation->codeValidation();
-    $emailChecked->setCode($_POST['code']);
-    $result = $emailChecked->verifyCode();
+
+    if(empty($code_validation)){
+        $emailChecked = new User;
+        $emailChecked->setCode($_POST['code']);
+        $emailChecked->setEmail($user->email);
+        $result = $emailChecked->verifyCode();
+    }
+    
     if($result){
-        $emailChecked->setStatus(1);
-        $status = $emailChecked->updateStatus();
-        if($status){
-            //session_start();
-            $_SESSION['user'] = $user;
-            //print_r($_SESSION);die;
-            header("Location:index.php");
+        if(isset($_GET['forget']) && $_GET['forget'] == 1){
+            header("Location:change-password.php?email=" .$_GET['email']);
+        } else if(isset($_GET['forget']) && $_GET['forget'] == 0){
+            $emailChecked->setStatus(1);
+            $status = $emailChecked->updateStatus();
+            if($status){
+                //session_start();
+                $_SESSION['user'] = $user;
+                //print_r($_SESSION);die;
+                header("Location:index.php");
+            } else {
+                $errors['something'] = "<div class='alert alert-danger'>Something Went Wrong</div>";
+            }
         } else {
-            $errors['something'] = "<div class='alert alert-danger'>Something Went Wrong</div>";
+            header("Location:404.php");
         }
+        
     } else {
         $errors['code'] = "<div class='alert alert-danger'>Wrong Code!</div>";
     }

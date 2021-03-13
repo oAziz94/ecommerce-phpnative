@@ -57,75 +57,51 @@ session_start();
                                             </ul>
                                         </li>
                                         <li><a href="about-us.php">about</a></li>
-                                        <li class="mega-menu-position top-hover"><a href="shop.php">shop</a>
+                                        <li class="mega-menu-position top-hover"><a href="categories.php">Categories</a>
                                             <ul class="mega-menu">
-                                                <li>
-                                                    <ul>
-                                                        <li class="mega-menu-title">Categories 01</li>
-                                                        <li><a href="shop.php">Aconite</a></li>
-                                                        <li><a href="shop.php">Ageratum</a></li>
-                                                        <li><a href="shop.php">Allium</a></li>
-                                                        <li><a href="shop.php">Anemone</a></li>
-                                                        <li><a href="shop.php">Angelica</a></li>
-                                                        <li><a href="shop.php">Angelonia</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li>
-                                                    <ul>
-                                                        <li class="mega-menu-title">Categories 02</li>
-                                                        <li><a href="shop.php">Balsam</a></li>
-                                                        <li><a href="shop.php">Baneberry</a></li>
-                                                        <li><a href="shop.php">Bee Balm</a></li>
-                                                        <li><a href="shop.php">Begonia</a></li>
-                                                        <li><a href="shop.php">Bellflower</a></li>
-                                                        <li><a href="shop.php">Bergenia</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li>
-                                                    <ul>
-                                                        <li class="mega-menu-title">Categories 03</li>
-                                                        <li><a href="shop.php">Caladium</a></li>
-                                                        <li><a href="shop.php">Calendula</a></li>
-                                                        <li><a href="shop.php">Carnation</a></li>
-                                                        <li><a href="shop.php">Catmint</a></li>
-                                                        <li><a href="shop.php">Celosia</a></li>
-                                                        <li><a href="shop.php">Chives</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li>
-                                                    <ul>
-                                                        <li class="mega-menu-title">Categories 04</li>
-                                                        <li><a href="shop.php">Daffodil</a></li>
-                                                        <li><a href="shop.php">Dahlia</a></li>
-                                                        <li><a href="shop.php">Daisy</a></li>
-                                                        <li><a href="shop.php">Diascia</a></li>
-                                                        <li><a href="shop.php">Dusty Miller</a></li>
-                                                        <li><a href="shop.php">Dame’s Rocket</a></li>
-                                                    </ul>
-                                                </li>
+                                                
+                                                <?php 
+                                                    include_once 'php/Category.php';
+                                                    include_once 'php/Subcategory.php';
+                                                    $category = new Category;
+                                                    $subCategory = new SubCategory;
+                                                    $categoriesResult = $category->getAllData();
+                                                    if($categoriesResult){
+                                                        $categories = $categoriesResult->fetch_all(MYSQLI_ASSOC);
+                                                        foreach($categories AS $key=>$value){
+                                                ?>           
+                                                            <li> 
+                                                                <ul>
+                                                                    <li class="mega-menu-title"><?php echo $value['name']; ?></li>
+                                                                    <?php 
+                                                                        $subCategory->setCategory($value['id']);
+                                                                        $subCategoryResult = $subCategory->getSubFromCat();
+                                                                        if($subCategoryResult){
+                                                                            $subCategories = $subCategoryResult->fetch_all(MYSQLI_ASSOC);
+                                                                            foreach($subCategories AS $k => $v){
+                                                                    ?>
+                                                                                <li><a href="shop.php?sub=<?php echo $v['id'] ?>"><?php echo $v['name'] ?></a></li>
+
+                                                                    <?php            
+                                                                            }
+                                                                        } else {
+                                                                            // Do Nothing
+                                                                        }
+                                                                    ?>
+                                                                    
+                                                        
+                                                                </ul>
+                                                            </li>
+                                                <?php            
+                                                        }
+                                                    } else {
+                                                        // Do Nothing
+                                                    }
+                                                ?>
                                             </ul>
-                                        </li>
-                                        <li class="top-hover"><a href="blog-left-sidebar.php">blog</a>
-                                            <ul class="submenu">
-                                                <li><a href="blog-masonry.php">Blog Masonry</a></li>
-                                                <li><a href="#">Blog Standard <span><i class="ion-ios-arrow-right"></i></span></a>
-                                                    <ul class="lavel-menu">
-                                                        <li><a href="blog-left-sidebar.php">left sidebar</a></li>
-                                                        <li><a href="blog-right-sidebar.php">right sidebar</a></li>
-                                                        <li><a href="blog-no-sidebar.php">no sidebar</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a href="#">Post Types <span><i class="ion-ios-arrow-right"></i></span> </a>
-                                                    <ul class="lavel-menu">
-                                                        <li><a href="blog-details-standerd.php">Standard post</a></li>
-                                                        <li><a href="blog-details-audio.php">audio post</a></li>
-                                                        <li><a href="blog-details-video.php">video post</a></li>
-                                                        <li><a href="blog-details-gallery.php">gallery post</a></li>
-                                                        <li><a href="blog-details-link.php">link post</a></li>
-                                                        <li><a href="blog-details-quote.php">quote post</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
+                                        </li>        
+                                        <li class="top-hover"><a href="shop.php">Shop</a>
+                                            
                                         </li>
                                         <li class="top-hover"><a href="#">pages</a>
                                             <ul class="submenu">

@@ -89,6 +89,31 @@ class validation {
 
         return $errors;
     }
+
+    public function emailValidationURL($data){
+        if($data){
+            // If Key Email Exists
+            if(isset($data['email'])){
+                // If Email Exists
+                if($data['email']){
+                    $emailChecked = new User;
+                    $emailChecked->setEmail($data['email']);
+                    $emailExists = $emailChecked->checkEmail();
+                    if($emailExists){
+                        return $emailExists->fetch_object();
+                    } else {
+                        header('Location:404.php');
+                    }
+                } else {
+                    header('Location:404.php');
+                }
+            } else {
+                header('Location:404.php');
+            }
+        } else {
+            header('Location:404.php');
+        }
+    }
 }
 
 ?>
